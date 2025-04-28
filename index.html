@@ -2,68 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>充满爱心的泡泡</title>
+  <title>锁页面</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      overflow: hidden;
-      background: #ffe6e6;
+      padding: 0;
       height: 100vh;
-      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f7f0e1; /* 背景色米白色 */
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .lock-container {
+      display: none;
+      text-align: center;
+    }
+
+    /* 锁样式：钥匙孔样式 */
+    .lock {
       position: relative;
+      width: 100px;
+      height: 150px;
+      background: #ff7f7f;
+      border-radius: 25px 25px 10px 10px;
+      margin: 20px auto;
     }
-    .heart {
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 5s linear infinite;
-    }
-    .heart::before,
-    .heart::after {
+
+    .lock::before {
       content: '';
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
       position: absolute;
+      top: 10px;
+      left: 35px;
+      width: 30px;
+      height: 30px;
+      background: #ff4d4d;
+      border-radius: 50%;
     }
-    .heart::before {
-      top: -10px;
-      left: 0;
+
+    .lock::after {
+      content: '';
+      position: absolute;
+      top: 70px;
+      left: 40px;
+      width: 20px;
+      height: 30px;
+      background: #fff;
+      border-radius: 10px;
     }
-    .heart::after {
-      left: -10px;
-      top: 0;
+
+    .message {
+      font-size: 20px;
+      color: #ff4d4d;
+      margin-top: 20px;
     }
-    @keyframes float {
-      0% {
-        transform: translateY(0) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) rotate(45deg);
-        opacity: 0;
-      }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff4d4d;
     }
   </style>
 </head>
 <body>
+
+<div class="container">
+  <h1>请输入密码解锁</h1>
+
+  <div class="lock-container">
+    <div class="lock"></div>
+    <div class="message">恭喜你解锁成功！🔒</div>
+  </div>
+
+  <div class="password-container">
+    <input type="text" id="password1" placeholder="输入密码1" />
+    <input type="text" id="password2" placeholder="输入密码2" />
+    <button onclick="checkPassword()">提交密码</button>
+    <div id="errorMessage" class="message"></div>
+  </div>
+</div>
+
 <script>
-function createHeart() {
-  const heart = document.createElement('div');
-  heart.className = 'heart';
-  heart.style.left = Math.random() * 100 + 'vw';
-  heart.style.animationDuration = 3 + Math.random() * 2 + 's'; // 随机动画时间
-  document.body.appendChild(heart);
+  function checkPassword() {
+    const password1 = document.getElementById('password1').value;
+    const password2 = document.getElementById('password2').value;
+    const errorMessage = document.getElementById('errorMessage');
+    const lockContainer = document.querySelector('.lock-container');
 
-  setTimeout(() => {
-    heart.remove();
-  }, 5000);
-}
+    // 判断密码是否正确
+    if (password1 === '11' && password2 === '22') {
+      lockContainer.style.display = 'block'; // 显示锁
+      errorMessage.textContent = ''; // 清空错误信息
 
-setInterval(createHeart, 200); // 每200毫秒生成一个爱心
+      // 跳转到爱心页面
+      setTimeout(() => {
+        window.location.href = 'heart.html'; // 页面跳转
+      }, 1500); // 延迟1.5秒跳转，给用户一些展示时间
+    } else {
+      errorMessage.textContent = '密码错误，请重新输入！'; // 显示错误信息
+    }
+  }
 </script>
+
 </body>
 </html>

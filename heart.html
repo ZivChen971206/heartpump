@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>中心与点击扩散的爱心泡泡</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #f7f0e1; /* 米白色背景 */
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+    }
+    .heart {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      background: #f8c7d8; /* 淡粉色爱心 */
+      transform: rotate(45deg);
+      animation: floatAway linear forwards;
+    }
+    .heart::before,
+    .heart::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: #f8c7d8; /* 淡粉色爱心 */
+      border-radius: 50%;
+      position: absolute;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+    @keyframes floatAway {
+      to {
+        transform: translate(var(--x), var(--y)) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    .message {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 2em;
+      color: #ff6699;
+      text-shadow: 2px 2px 5px #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="message">
+  ✨愿你的世界充满爱与希望✨
+</div>
+
+<audio id="bgm" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5cf2fa9930.mp3?filename=relaxing-music-11721.mp3" autoplay loop></audio>
+
+<script>
+let isClick = false; // 标记是否点击过屏幕
+let clickX = window.innerWidth / 2; // 默认点击位置为屏幕中心
+let clickY = window.innerHeight / 2;
+
+function randomColor() {
+  return '#f8c7d8'; // 统一的淡粉色
+}
+
+// 生成爱心泡泡
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.background = randomColor();
+  heart.style.top = isClick ? `${clickY}px` : '50%';
+  heart.style.left = isClick ? `${clickX}px` : '50%';
+  heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+  
+  // 随机扩散方向 (x偏移，y偏移)
+  const x = (Math.random() - 0.5) * 400 + 'px'; // -200px到+200px
+  const y = (Math.random() - 0.5) * 400 + 'px'; // -200px到+200px
+  heart.style.setProperty('--x', x);
+  heart.style.setProperty('--y', y);
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 5000);
+}
+
+setInterval(createHeart, 200);
+
+// 监听点击事件，更新点击位置
+document.addEventListener('click', function(event) {
+  isClick = true; // 变更为点击状态
+  clickX = event.pageX; // 获取点击位置X
+  clickY = event.pageY; // 获取点击位置Y
+  const music = document.getElementById('bgm');
+  if (music.paused) {
+    music.play();
+  }
+  // 在点击后30秒恢复为中心模式
+  setTimeout(() => {
+    isClick = false;
+  }, 30000); // 如果想点击后30秒恢复到中间模式，可以调整这个时间
+});
+</script>
+
+</body>
+</html>
