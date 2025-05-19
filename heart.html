@@ -1,117 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <!-- 移动端适配 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>中心与点击扩散的爱心泡泡</title>
   <style>
-    body {
+    :root {
+      --heart-colors: #f8c7d8, #f99cb2, #ffbfdc, #ffe1e9;
+    }
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      background: #f7f0e1; /* 米白色背景 */
-      height: 100vh;
-      width: 100vw;
-      position: relative;
+      background: radial-gradient(circle at center, #f7f0e1, #f0e6d5);
+      animation: bgPulse 10s infinite alternate ease-in-out;
       font-family: "Comic Sans MS", cursive, sans-serif;
+      /* 提升动画性能 */
+      will-change: background;
+      touch-action: none;
+    }
+    @keyframes bgPulse {
+      0% { background: radial-gradient(circle at center, #f7f0e1, #f0e6d5); }
+      100% { background: radial-gradient(circle at center, #f0e6d5, #e8dac6); }
     }
     .heart {
-      width: 20px;
-      height: 20px;
+      width: var(--size);
+      height: var(--size);
       position: absolute;
-      background: #f8c7d8; /* 淡粉色爱心 */
+      background: var(--color);
       transform: rotate(45deg);
-      animation: floatAway linear forwards;
+      animation: floatAway var(--duration) forwards ease;
+      opacity: 0.8;
+      will-change: transform, opacity;
     }
     .heart::before,
     .heart::after {
       content: '';
-      width: 20px;
-      height: 20px;
-      background: #f8c7d8; /* 淡粉色爱心 */
+      width: var(--size);
+      height: var(--size);
+      background: var(--color);
       border-radius: 50%;
       position: absolute;
     }
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
+    .heart::before { top: calc(-1 * var(--size) / 2); left: 0; }
+    .heart::after { left: calc(-1 * var(--size) / 2); top: 0; }
     @keyframes floatAway {
-      to {
-        transform: translate(var(--x), var(--y)) rotate(720deg);
+      0% {
+        transform: translate3d(0, 0, 0) rotate(45deg) scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: translate3d(var(--x), var(--y), 0) rotate(360deg) scale(1.2);
+      }
+      100% {
+        transform: translate3d(calc(var(--x) * 1.2), calc(var(--y) * 1.2), 0) rotate(720deg) scale(0.8);
         opacity: 0;
       }
     }
     .message {
       position: absolute;
-      top: 40%;
+      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate3d(-50%, -50%, 0);
       text-align: center;
-      font-size: 2em;
+      /* 响应式文字大小 */
+      font-size: clamp(3rem, 5vw, 3rem);
       color: #ff6699;
       text-shadow: 2px 2px 5px #ffffff;
+      animation: floatText 4s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes floatText {
+      0%, 100% { transform: translate3d(-50%, -50%, 0) translateY(0); }
+      50%      { transform: translate3d(-50%, -50%, 0) translateY(-8px); }
+    }
+    /* 手机屏幕心形生成间隔优化 */
+    @media (max-width: 600px) {
+      body { animation-duration: 12s; }
     }
   </style>
 </head>
 <body>
+  <div class="message">
+    💖馨欣<br>
+    <br>
+    ✨愿你的世界充满爱与希望<br>
+    <br>
+    💌做我女朋友吧
+  </div>
 
-<div class="message">
-  ✨愿你的世界充满爱与希望✨
-</div>
-
-<audio id="bgm" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5cf2fa9930.mp3?filename=relaxing-music-11721.mp3" autoplay loop></audio>
-
-<script>
-let isClick = false; // 标记是否点击过屏幕
-let clickX = window.innerWidth / 2; // 默认点击位置为屏幕中心
-let clickY = window.innerHeight / 2;
-
-function randomColor() {
-  return '#f8c7d8'; // 统一的淡粉色
-}
-
-// 生成爱心泡泡
-function createHeart() {
-  const heart = document.createElement('div');
-  heart.className = 'heart';
-  heart.style.background = randomColor();
-  heart.style.top = isClick ? `${clickY}px` : '50%';
-  heart.style.left = isClick ? `${clickX}px` : '50%';
-  heart.style.animationDuration = (3 + Math.random() * 2) + 's';
-  
-  // 随机扩散方向 (x偏移，y偏移)
-  const x = (Math.random() - 0.5) * 400 + 'px'; // -200px到+200px
-  const y = (Math.random() - 0.5) * 400 + 'px'; // -200px到+200px
-  heart.style.setProperty('--x', x);
-  heart.style.setProperty('--y', y);
-
-  document.body.appendChild(heart);
-
-  setTimeout(() => {
-    heart.remove();
-  }, 5000);
-}
-
-setInterval(createHeart, 200);
-
-// 监听点击事件，更新点击位置
-document.addEventListener('click', function(event) {
-  isClick = true; // 变更为点击状态
-  clickX = event.pageX; // 获取点击位置X
-  clickY = event.pageY; // 获取点击位置Y
-  const music = document.getElementById('bgm');
-  if (music.paused) {
-    music.play();
-  }
-  // 在点击后30秒恢复为中心模式
-  setTimeout(() => {
-    isClick = false;
-  }, 30000); // 如果想点击后30秒恢复到中间模式，可以调整这个时间
-});
-</script>
-
+  <script>
+    function pickColor() {
+      const colors = getComputedStyle(document.documentElement)
+        .getPropertyValue('--heart-colors').split(',');
+      return colors[Math.floor(Math.random() * colors.length)].trim();
+    }
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      const size = (10 + Math.random() * 30) * (window.innerWidth / 375); // 按屏宽缩放
+      heart.style.setProperty('--size', `${size}px`);
+      const duration = 3 + Math.random() * 2;
+      heart.style.setProperty('--duration', `${duration}s`);
+      const x0 = Math.random() * window.innerWidth;
+      const y0 = Math.random() * window.innerHeight;
+      heart.style.top = `${y0}px`;
+      heart.style.left = `${x0}px`;
+      const x = (Math.random() - 0.5) * 300 + 'px';
+      const y = (Math.random() - 0.5) * 300 + 'px';
+      heart.style.setProperty('--x', x);
+      heart.style.setProperty('--y', y);
+      heart.style.setProperty('--color', pickColor());
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000 + 500);
+    }
+    // 根据屏幕分辨率优化频率
+    const interval = window.innerWidth < 600 ? 300 : 200;
+    setInterval(createHeart, interval);
+  </script>
 </body>
 </html>
