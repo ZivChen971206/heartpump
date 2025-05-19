@@ -139,7 +139,7 @@
     submitBtn.addEventListener('click', () => {
       const pwd1 = document.getElementById('pwd1').value;
       const pwd2 = document.getElementById('pwd2').value;
-      if (pwd1 === '11' && pwd2 === '22') {
+      if ((pwd1 === '陈子健' && pwd2 === '齐馨欣') || (pwd1 === '齐馨欣' && pwd2 === '陈子健')) {
         errorDiv.textContent = '';
         form.style.display = 'none';
         key.style.display = 'block';
