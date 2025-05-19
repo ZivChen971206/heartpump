@@ -129,27 +129,29 @@
     </div>
   </div>
 
-  <script>
-    const submitBtn = document.getElementById('submitBtn');
-    const key = document.getElementById('key');
-    const lockContainer = document.getElementById('lockContainer');
-    const errorDiv = document.getElementById('error');
-    const form = document.getElementById('form');
+<script>
+  const submitBtn = document.getElementById('submitBtn');
+  const key = document.getElementById('key');
+  const lockContainer = document.getElementById('lockContainer');
+  const errorDiv = document.getElementById('error');
+  const form = document.getElementById('form');
 
-    submitBtn.addEventListener('click', () => {
-      const pwd1 = document.getElementById('pwd1').value;
-      const pwd2 = document.getElementById('pwd2').value;
-      if ((pwd1 === '陈子健' && pwd2 === '齐馨欣') || (pwd1 === '齐馨欣' && pwd2 === '陈子健')) {
-        errorDiv.textContent = '';
-        form.style.display = 'none';
-        key.style.display = 'block';
-        setTimeout(() => key.classList.add('inserted'), 100);
-        setTimeout(() => lockContainer.classList.add('unlocked'), 900);
-        setTimeout(() => window.location.href = 'heart.html', 5000);
-      } else {
-        errorDiv.textContent = '密码错误，请重新输入';
-      }
-    });
-  </script>
+  submitBtn.addEventListener('click', () => {
+    const pwd1 = document.getElementById('pwd1').value;
+    const pwd2 = document.getElementById('pwd2').value;
+    if ((pwd1 === '陈子健' && pwd2 === '齐馨欣') || (pwd1 === '齐馨欣' && pwd2 === '陈子健')) {
+      // 标记为已解锁
+      localStorage.setItem('unlocked', 'true');
+      errorDiv.textContent = '';
+      form.style.display = 'none';
+      key.style.display = 'block';
+      setTimeout(() => key.classList.add('inserted'), 100);
+      setTimeout(() => lockContainer.classList.add('unlocked'), 900);
+      setTimeout(() => window.location.href = 'heart.html', 2500);
+    } else {
+      errorDiv.textContent = '密码错误，请重新输入';
+    }
+  });
+</script>
 </body>
 </html>

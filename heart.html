@@ -96,6 +96,12 @@
   </div>
 
   <script>
+     // 校验是否已解锁，否则跳回锁页面
+     if (localStorage.getItem('unlocked') !== 'true') {
+      window.location.href = 'index.html';
+    }
+    // （可选）打开后清除标记，刷新则需重新解锁
+    localStorage.removeItem('unlocked');
     function pickColor() {
       const colors = getComputedStyle(document.documentElement)
         .getPropertyValue('--heart-colors').split(',');
